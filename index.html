@@ -1,842 +1,199 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
 <head>
-<meta charset="UTF-8">
-<title>TÜGVA Yazılım Geliştirme Yol Haritası</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TÜGVA Yazılım Roadmap</title>
 <style>
-  :root{
-    --navy: #0B1B36;
-    --navy-deep: #060F22;
-    --navy-soft: #142D54;
-    --gold: #B8923F;
-    --gold-bright: #D4AF6A;
-    --ink: #1C1A16;
-    --paper: #F7F4EC;
-    --paper-soft: #EFE9DA;
-    --line: #DDD4BE;
-    --muted: #6E6657;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0;
-    background:var(--paper);
-    color:var(--ink);
-    font-family:'Inter',sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .sheet{
-    max-width:1080px;
-    margin:0 auto;
-    background:var(--paper);
-  }
-
-  /* ===== COVER / HEADER ===== */
-  .cover{
-    position:relative;
-    background:
-      radial-gradient(circle at 88% 8%, rgba(212,175,106,0.10) 0%, transparent 40%),
-      linear-gradient(168deg, var(--navy-deep) 0%, var(--navy) 60%, var(--navy-soft) 100%);
-    color:#EDE7D8;
-    padding:64px 64px 0;
-  }
-  .cover-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    padding-bottom:40px;
-    border-bottom:1px solid rgba(212,175,106,0.22);
-  }
-  .mark{
-    display:flex; align-items:center; gap:12px;
-  }
-  .mark .diamond{
-    width:13px;height:13px;
-    border:1.4px solid var(--gold-bright);
-    transform:rotate(45deg);
-    flex-shrink:0;
-  }
-  .mark-text{
-    font-family:'JetBrains Mono',monospace;
-    font-size:12px;
-    letter-spacing:0.2em;
-    text-transform:uppercase;
-    color:var(--gold-bright);
-  }
-  .doc-meta{
-    text-align:right;
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    color:#9C9683;
-    line-height:1.8;
-  }
-  .doc-meta strong{color:#D7D1BF; font-weight:500;}
-
-  .cover-body{
-    padding:56px 0 64px;
-  }
-  .cover-body h1{
-    font-family:'Fraunces',serif;
-    font-weight:600;
-    font-size:clamp(36px, 4.6vw, 56px);
-    line-height:1.08;
-    margin:0 0 20px;
-    letter-spacing:-0.01em;
-    max-width:760px;
-    color:#FFFFFF;
-  }
-  .cover-body h1 em{
-    font-style:italic;
-    font-weight:400;
-    color:var(--gold-bright);
-  }
-  .cover-body p.sub{
-    font-size:16px;
-    color:#C2BBA4;
-    max-width:560px;
-    line-height:1.7;
-    margin:0;
-  }
-
-  /* ===== PHASE STRIP (Gantt-style signature element) ===== */
-  .phase-strip{
-    display:grid;
-    grid-template-columns:repeat(6, 1fr);
-    border-top:1px solid rgba(212,175,106,0.22);
-  }
-  .phase-seg{
-    padding:22px 18px 26px;
-    border-right:1px solid rgba(212,175,106,0.16);
-    position:relative;
-  }
-  .phase-seg:last-child{border-right:none;}
-  .phase-seg .pnum{
-    font-family:'JetBrains Mono',monospace;
-    font-size:10.5px;
-    color:var(--gold-bright);
-    letter-spacing:0.08em;
-    margin-bottom:10px;
-  }
-  .phase-seg .pname{
-    font-family:'Fraunces',serif;
-    font-size:18px;
-    font-weight:600;
-    color:#FFFFFF;
-    margin-bottom:5px;
-  }
-  .phase-seg .pphase{
-    font-size:10.5px;
-    color:#9C9683;
-    line-height:1.45;
-    letter-spacing:0.01em;
-  }
-  .phase-seg .pbar{
-    position:absolute; left:0; right:0; bottom:0;
-    height:3px;
-    background:linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%);
-    opacity:0.85;
-  }
-
-  /* ===== STAT ROW ===== */
-  .statrow{
-    display:flex;
-    background:var(--paper-soft);
-    border-bottom:1px solid var(--line);
-  }
-  .stat{
-    flex:1;
-    padding:26px 32px;
-    border-right:1px solid var(--line);
-  }
-  .stat:last-child{border-right:none;}
-  .stat .num{
-    font-family:'Fraunces',serif;
-    font-size:30px;
-    font-weight:600;
-    color:var(--navy);
-    line-height:1;
-  }
-  .stat .label{
-    font-size:11px;
-    color:var(--muted);
-    text-transform:uppercase;
-    letter-spacing:0.09em;
-    margin-top:7px;
-  }
-
-  /* ===== DOSSIER / MONTH SECTIONS ===== */
-  .dossier{
-    padding:8px 64px 40px;
-  }
-  .month-entry{
-    position:relative;
-    padding:54px 0 50px;
-    border-bottom:1px solid var(--line);
-  }
-  .month-entry:last-child{border-bottom:none;}
-
-  .entry-head{
-    display:flex;
-    align-items:baseline;
-    gap:22px;
-    margin-bottom:30px;
-  }
-  .entry-num{
-    font-family:'Fraunces',serif;
-    font-size:64px;
-    font-weight:600;
-    color:var(--paper-soft);
-    line-height:0.8;
-    -webkit-text-stroke:1px var(--line);
-    flex-shrink:0;
-    min-width:70px;
-  }
-  .entry-title-block{
-    border-left:2px solid var(--gold);
-    padding-left:20px;
-  }
-  .entry-title-block .ay{
-    font-family:'Fraunces',serif;
-    font-size:30px;
-    font-weight:600;
-    color:var(--navy);
-    margin:0 0 4px;
-  }
-  .entry-title-block .faz{
-    font-size:11.5px;
-    text-transform:uppercase;
-    letter-spacing:0.13em;
-    color:var(--gold);
-    font-weight:700;
-  }
-
-  .entry-cols{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:48px;
-    padding-left:92px;
-  }
-  .col-label{
-    font-family:'JetBrains Mono',monospace;
-    font-size:10.5px;
-    letter-spacing:0.12em;
-    text-transform:uppercase;
-    font-weight:600;
-    margin:0 0 16px;
-    padding-bottom:10px;
-    border-bottom:1px solid var(--line);
-  }
-  .col-label.new{color:var(--navy);}
-  .col-label.carry{color:var(--gold);}
-
-  ul.tasklist{
-    list-style:none;
-    margin:0; padding:0;
-    display:grid;
-    gap:13px;
-  }
-  ul.tasklist li{
-    position:relative;
-    padding-left:19px;
-    font-size:14px;
-    line-height:1.6;
-    color:#2B2724;
-  }
-  ul.tasklist.new li::before{
-    content:"";
-    position:absolute; left:0; top:7px;
-    width:6px; height:6px;
-    background:var(--navy);
-    border-radius:1px;
-  }
-  ul.tasklist.carry li::before{
-    content:"";
-    position:absolute; left:0; top:7px;
-    width:6px; height:6px;
-    background:var(--gold);
-    border-radius:50%;
-  }
-  ul.tasklist li .note{
-    display:block;
-    font-size:12px;
-    color:var(--muted);
-    margin-top:3px;
-    font-style:italic;
-  }
-
-  /* ===== SIGNOFF FOOTER ===== */
-  .signoff{
-    background:var(--navy-deep);
-    color:#9C9683;
-    padding:0 64px;
-  }
-  .signoff-top{
-    display:flex;
-    justify-content:space-between;
-    padding:48px 0 40px;
-    border-bottom:1px solid rgba(212,175,106,0.18);
-    flex-wrap:wrap;
-    gap:24px;
-  }
-  .signoff-block .stitle{
-    font-size:10.5px;
-    text-transform:uppercase;
-    letter-spacing:0.12em;
-    color:var(--gold-bright);
-    margin-bottom:10px;
-  }
-  .signoff-block .sval{
-    font-size:14px;
-    color:#D7D1BF;
-    line-height:1.6;
-  }
-  .signoff-bottom{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:28px 0;
-    flex-wrap:wrap;
-    gap:14px;
-  }
-  .signoff-bottom .brand{
-    font-family:'Fraunces',serif;
-    font-size:17px;
-    color:#FFFFFF;
-    font-weight:600;
-  }
-  .signoff-bottom .meta{
-    font-size:11px;
-    font-family:'JetBrains Mono',monospace;
-    color:#766F60;
-    letter-spacing:0.04em;
-  }
-
-  @media(max-width:880px){
-    .cover{padding:40px 24px 0;}
-    .cover-body{padding:40px 0 48px;}
-    .phase-strip{grid-template-columns:repeat(3, 1fr);}
-    .phase-seg:nth-child(3){border-right:none;}
-    .statrow{flex-wrap:wrap;}
-    .stat{flex:1 1 50%; border-bottom:1px solid var(--line);}
-    .dossier{padding:8px 24px 24px;}
-    .entry-cols{grid-template-columns:1fr; padding-left:0; gap:28px;}
-    .entry-num{font-size:44px; min-width:50px;}
-    .entry-title-block{padding-left:14px;}
-    .signoff{padding:0 24px;}
-  }
-
-  /* ===== FILTER BAR (segmented control, pastel) ===== */
-  .filterbar{
-    position:sticky;
-    top:0;
-    z-index:40;
-    background:rgba(247,244,236,0.97);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--line);
-    padding:16px 64px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:14px;
-  }
-  .filter-track{
-    display:inline-flex;
-    background:#EAE5D7;
-    border:1px solid var(--line);
-    border-radius:999px;
-    padding:4px;
-    gap:2px;
-  }
-  .filter-btn{
-    font-family:'Inter',sans-serif;
-    font-size:13px;
-    font-weight:600;
-    color:var(--muted);
-    background:transparent;
-    border:none;
-    border-radius:999px;
-    padding:9px 18px;
-    cursor:pointer;
-    transition:all .16s ease;
-    white-space:nowrap;
-  }
-  .filter-btn:hover{ color:var(--ink); }
-  .filter-btn.active{
-    background:#FFFFFF;
-    color:var(--ink);
-    box-shadow:0 1px 3px rgba(20,20,15,0.10), 0 1px 2px rgba(20,20,15,0.06);
-  }
-  .filter-btn .fdot{
-    display:inline-block;
-    width:7px;height:7px;
-    border-radius:50%;
-    margin-right:7px;
-    vertical-align:middle;
-  }
-  .filter-btn[data-filter="planned"] .fdot{ background:#9C92C7; }
-  .filter-btn[data-filter="in-progress"] .fdot{ background:#D9A52A; }
-  .filter-btn[data-filter="done"] .fdot{ background:#4FA876; }
-  .filterbar-hint{
-    font-size:11.5px;
-    color:var(--muted);
-    font-style:italic;
-  }
-
-  /* ===== STATUS BADGES ON TASK ITEMS (pastel chips) ===== */
-  ul.tasklist li{
-    cursor:pointer;
-    padding-right:130px;
-    border-radius:6px;
-    transition:background .15s ease, opacity .2s ease;
-  }
-  ul.tasklist li:hover{
-    background:rgba(11,27,54,0.045);
-  }
-  ul.tasklist li:active{
-    background:rgba(11,27,54,0.08);
-  }
-  .status-badge{
-    position:absolute;
-    right:0;
-    top:-1px;
-    font-family:'Inter',sans-serif;
-    font-size:11px;
-    font-weight:700;
-    letter-spacing:0.01em;
-    padding:4px 12px;
-    border-radius:20px;
-    white-space:nowrap;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    gap:6px;
-    pointer-events:none;
-  }
-  .status-badge .sdot{
-    width:6px;height:6px;border-radius:50%;
-    flex-shrink:0;
-  }
-  .badge-planned{
-    background:#EDEAF5;
-    color:#6B5B95;
-  }
-  .badge-planned .sdot{ background:#9C92C7; }
-  .badge-in-progress{
-    background:#FCF3D9;
-    color:#9C7A1E;
-  }
-  .badge-in-progress .sdot{
-    background:#D9A52A;
-    animation:pulse 1.6s infinite;
-  }
-  .badge-done{
-    background:#E1F4E8;
-    color:#2F7D52;
-  }
-  .badge-done .sdot{ background:#4FA876; }
-  @keyframes pulse{
-    0%{ box-shadow:0 0 0 0 rgba(217,165,42,0.45); }
-    70%{ box-shadow:0 0 0 5px rgba(217,165,42,0); }
-    100%{ box-shadow:0 0 0 0 rgba(217,165,42,0); }
-  }
-  li.state-done{
-    opacity:0.55;
-    text-decoration:line-through;
-  }
-  li.state-done .note{ text-decoration:line-through; }
-  li[data-status] .status-badge{ text-decoration:none; }
-  li.filtered-out{ display:none !important; }
-
-  /* ===== COMPLETION STAT ===== */
-  .stat.completion .num{ color:#2F7D52; }
-  .stat.completion .bar-track{
-    height:4px; background:var(--line); border-radius:3px;
-    margin-top:9px; overflow:hidden;
-  }
-  .stat.completion .bar-fill{
-    height:100%; background:#4FA876; width:0%;
-    transition:width .3s ease;
-  }
-
-  @media(max-width:880px){
-    .filterbar{padding:12px 24px; position:static; flex-direction:column; align-items:flex-start;}
-    .filter-track{ width:100%; overflow-x:auto; }
-    ul.tasklist li{ padding-right:0; padding-bottom:30px; }
-    .status-badge{
-      position:static;
-      display:inline-flex;
-      margin-top:8px;
-    }
-  }
-
-  @media print{
-    body{background:#fff;}
-    .filterbar{display:none;}
-    .status-badge{display:none;}
-  }
+:root{
+  --navy:#12213b; --navy2:#20395f; --orange:#f1772c; --green:#2c8a5b;
+  --blue:#3970b5; --purple:#6a5ab4; --red:#c84848; --amber:#bd7a18;
+  --bg:#f4f7fb; --card:#fff; --line:#dfe6ee; --text:#202938; --muted:#6d7888;
+  --soft:#f7f9fc; --shadow:0 14px 42px rgba(18,33,59,.07)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:1480px;margin:auto;padding:24px 24px 64px}
+.hero{position:relative;overflow:hidden;color:#fff;border-radius:24px;background:linear-gradient(135deg,var(--navy),var(--navy2));padding:30px 32px;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.055);right:-90px;top:-180px}
+.hero-row{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;position:relative;z-index:1}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c7d3e2;font-weight:800}
+h1{font-size:35px;line-height:1.1;margin:7px 0 8px}
+.hero p{max-width:900px;color:#dbe4ef;line-height:1.55;margin:0}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid var(--line);background:#fff;color:var(--navy);padding:10px 13px;border-radius:11px;font-weight:750;transition:.15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn.ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.3);color:#fff}
+.btn.danger{background:#fff2f2;border-color:#f0cece;color:#a93737}
+.btn.small{padding:7px 10px;font-size:12px}
+.meta-row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:16px 0 11px}
+.live{display:inline-flex;align-items:center;gap:7px;border:1px solid #cfe3d8;background:#edf8f1;color:#2c6d4d;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800}
+.live:before{content:"";width:8px;height:8px;border-radius:50%;background:#34a66b}
+.updated{font-size:11px;color:var(--muted)}
+.filters{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px;display:grid;grid-template-columns:1fr 1fr 1.35fr auto;gap:10px;align-items:end;box-shadow:0 6px 20px rgba(18,33,59,.035)}
+.field label{display:block;font-size:10px;font-weight:850;color:var(--muted);letter-spacing:.06em;margin-bottom:6px}
+.control{width:100%;border:1px solid #ccd6e2;background:#fff;color:var(--text);border-radius:10px;padding:10px 11px;outline:none}
+.control:focus{border-color:#7793b8;box-shadow:0 0 0 3px rgba(57,112,181,.1)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin:13px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 6px 18px rgba(18,33,59,.03)}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.kpi-label{font-size:11px;color:var(--muted);font-weight:800}
+.kpi-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#f1f4f8;color:var(--navy);font-weight:900}
+.kpi-value{font-size:27px;font-weight:850;color:var(--navy);margin-top:7px}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.kpi.overdue .kpi-value{color:var(--red)}
+.mini-progress{height:6px;background:#edf1f5;border-radius:99px;overflow:hidden;margin-top:9px}
+.mini-progress span{display:block;height:100%;background:var(--green);border-radius:99px}
+.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:13px;margin:13px 0 18px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 6px 18px rgba(18,33,59,.03)}
+.panel h2{font-size:16px;margin:0;color:var(--navy)}
+.panel-sub{font-size:11px;color:var(--muted);margin:4px 0 14px}
+.month-bars{display:grid;gap:8px}
+.month-bar{display:grid;grid-template-columns:115px 1fr 60px;gap:9px;align-items:center}
+.month-name{font-size:11px;font-weight:750;color:#4d5b6d}
+.bar-track{height:9px;background:#edf1f5;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:999px}
+.bar-value{font-size:10px;color:var(--muted);text-align:right}
+.status-list{display:grid;gap:9px}
+.status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1f5;padding-bottom:8px}
+.status-row:last-child{border-bottom:0;padding-bottom:0}
+.status-name{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:750}
+.status-dot{width:9px;height:9px;border-radius:50%}
+.status-count{font-size:13px;font-weight:850;color:var(--navy)}
+.section-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin:20px 0 9px}
+.section-head h2{font-size:20px;color:var(--navy);margin:0}
+.section-head p{font-size:11px;color:var(--muted);margin:4px 0 0}
+.task-list{display:grid;gap:9px}
+.task-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px 14px;display:grid;grid-template-columns:36px minmax(280px,1fr) 150px 135px;gap:11px;align-items:center;box-shadow:0 5px 14px rgba(18,33,59,.025)}
+.task-card.overdue{border-left:5px solid var(--red)}
+.task-card.recurring:not(.overdue){border-left:5px solid var(--blue)}
+.task-index{width:29px;height:29px;border-radius:8px;background:#f0f4f8;color:#526177;display:flex;align-items:center;justify-content:center;font-weight:850;font-size:11px}
+.task-title{font-size:13px;font-weight:800;color:#263348;line-height:1.35}
+.task-detail{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.42}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.badge{display:inline-flex;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:850;background:#f0f3f7;color:#566274}
+.badge.red{background:#fff0f0;color:#a93a3a}
+.badge.blue{background:#edf4ff;color:#3b6ea8}
+.status-pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:850;background:#f2f4f7;color:#526074}
+.due{font-size:10px;color:var(--muted)}
+.due strong{display:block;color:#263348;margin-bottom:3px;font-size:11px}
+.empty{background:#fff;border:1px dashed #ccd7e3;border-radius:15px;padding:34px;text-align:center;color:var(--muted)}
+.loading{padding:36px;text-align:center;color:var(--muted)}
+.spinner{width:28px;height:28px;border:3px solid #e3e8ef;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer{margin-top:27px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:10px;display:flex;justify-content:space-between;gap:16px}
+.toast{position:fixed;right:20px;bottom:20px;background:#17253f;color:#fff;padding:11px 14px;border-radius:11px;font-size:11px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.18);transform:translateY(28px);opacity:0;transition:.2s;pointer-events:none;z-index:100}
+.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.task-card{grid-template-columns:36px 1fr 145px}.due{grid-column:3}}
+@media(max-width:720px){.app{padding:14px 11px 45px}.hero{padding:24px 20px}.hero-row{flex-direction:column}h1{font-size:28px}.filters,.kpis{grid-template-columns:1fr}.task-card{grid-template-columns:32px 1fr}.status-pill,.due{grid-column:2}.month-bar{grid-template-columns:90px 1fr 48px}.footer{flex-direction:column}}
+@media print{body{background:#fff}.app{max-width:none;padding:7mm}.hero-actions,.filters{display:none!important}.task-card,.panel,.kpi,.hero{box-shadow:none}.task-card{break-inside:avoid}}
 </style>
 </head>
 <body>
-<div class="sheet">
-
-  <header class="cover">
-    <div class="cover-top">
-      <div class="mark">
-        <span class="diamond"></span>
-        <span class="mark-text">TÜGVA · Bilgi Teknolojileri ve Yazılım</span>
-      </div>
-      <div class="doc-meta">
-        RAPOR NO: <strong>TGY-2026-H2</strong><br>
-        TARİH: <strong>23 Haziran 2026</strong><br>
-        GİZLİLİK: <strong>Kurum İçi</strong>
-      </div>
+<div class="app">
+<header class="hero">
+  <div class="hero-row">
+    <div>
+      <div class="eyebrow">TÜGVA · Bilgi Teknolojileri ve Yazılım</div>
+      <h1>Yazılım Roadmap Dashboard</h1>
+      <p>Aylık iş planı, gerçekleşme durumu ve geciken maddeler için güncel yönetim görünümü.</p>
     </div>
-    <div class="cover-body">
-      <h1>Yazılım Geliştirme<br><em>Yol Haritası</em></h1>
-      <p class="sub">Temmuz – Aralık 2026 dönemine ait modül bazlı geliştirme, altyapı ve süreç iyileştirme planı. Yönetim onayına sunulmak üzere hazırlanmıştır.</p>
-    </div>
-    <div class="phase-strip">
-      <div class="phase-seg"><div class="pnum">07 / 2026</div><div class="pname">Temmuz</div><div class="pphase">Temel Düzenleme ve Altyapı</div><div class="pbar"></div></div>
-      <div class="phase-seg"><div class="pnum">08 / 2026</div><div class="pname">Ağustos</div><div class="pphase">İyileştirme ve Geliştirme</div><div class="pbar"></div></div>
-      <div class="phase-seg"><div class="pnum">09 / 2026</div><div class="pname">Eylül</div><div class="pphase">Portal ve Süreç Yönetimi</div><div class="pbar"></div></div>
-      <div class="phase-seg"><div class="pnum">10 / 2026</div><div class="pname">Ekim</div><div class="pphase">Kurumsal Yapılandırma</div><div class="pbar"></div></div>
-      <div class="phase-seg"><div class="pnum">11 / 2026</div><div class="pname">Kasım</div><div class="pphase">Çağrı Merkezi ve Veri Yönetimi</div><div class="pbar"></div></div>
-      <div class="phase-seg"><div class="pnum">12 / 2026</div><div class="pname">Aralık</div><div class="pphase">Kapanış ve Kalite Çalışmaları</div><div class="pbar"></div></div>
-    </div>
-  </header>
-
-  <div class="statrow">
-    <div class="stat"><div class="num">6</div><div class="label">Ay / Faz</div></div>
-    <div class="stat"><div class="num">35+</div><div class="label">Yeni Madde</div></div>
-    <div class="stat"><div class="num">12</div><div class="label">Devam Eden</div></div>
-    <div class="stat"><div class="num">2026</div><div class="label">Dönem</div></div>
-    <div class="stat completion">
-      <div class="num" id="completionNum">0 / 0</div>
-      <div class="label">Tamamlanan</div>
-      <div class="bar-track"><div class="bar-fill" id="completionBar"></div></div>
-    </div>
+    <div class="hero-actions"><button class="btn ghost" onclick="window.print()">PDF / Yazdır</button></div>
   </div>
+</header>
 
-  <div class="filterbar">
-    <div class="filter-track">
-      <button class="filter-btn active" data-filter="all">Tümü</button>
-      <button class="filter-btn" data-filter="planned"><span class="fdot"></span>Planlandı</button>
-      <button class="filter-btn" data-filter="in-progress"><span class="fdot"></span>Devam Ediyor</button>
-      <button class="filter-btn" data-filter="done"><span class="fdot"></span>Tamamlandı</button>
-    </div>
-    <div class="filterbar-hint">Bir maddeye tıklayarak durumunu değiştirebilirsiniz</div>
-  </div>
+<div class="meta-row"><div class="live">Canlı veri</div><div class="updated" id="updated">Yükleniyor...</div></div>
 
-  <main class="dossier">
+<section class="filters">
+  <div class="field"><label>AY</label><select id="monthFilter" class="control"></select></div>
+  <div class="field"><label>DURUM</label><select id="statusFilter" class="control"></select></div>
+  <div class="field"><label>ARAMA</label><input id="searchInput" class="control" placeholder="Madde veya detay ara..."></div>
+  <button class="btn" id="clearBtn">Filtreyi Temizle</button>
+</section>
 
-    <!-- TEMMUZ -->
-    <section class="month-entry">
-      <div class="entry-head">
-        <span class="entry-num">01</span>
-        <div class="entry-title-block">
-          <p class="ay">Temmuz 2026</p>
-          <p class="faz">Temel Düzenleme ve Altyapı</p>
-        </div>
-      </div>
-      <div class="entry-cols">
-        <div>
-          <p class="col-label new">📌 Yeni Maddeler</p>
-          <ul class="tasklist new">
-            <li>MS 365 kullanıcılarının temizlenmesi.</li>
-            <li>Kullanıcılardaki lisans ve rollerin çalışılması.</li>
-            <li>Active Directory mail açılış işlemlerinin Yazılım tarafına geçirilmesi.</li>
-            <li>Teknik dokümanların temizlenmesi; MS Teams grupları dahil gerekli olanların arşivlenmesi.</li>
-            <li>Tamamlanan modüllerin güncel kılavuzlarının matbu ve dijital olarak saklanması.</li>
-            <li>SMS ve e-posta entegrasyonunun yapılması.</li>
-            <li>CRM'deki talep yapısının netleştirilmesi.</li>
-            <li>Görev/faaliyet yapısı için yeni yöntemin netleştirilmesi.</li>
-            <li>BT talep yapısının hayata geçirilmesi.</li>
-            <li>İdari işler talep maili çalışması.</li>
-            <li>İzin talebi bildirimlerinin son testi ve tamamlanması.</li>
-            <li>İş ve maaş avansı mail çalışmalarının tamamlanması.</li>
-            <li>Yurt modülü öğrenci kaydı – konaklama bilgisi sıfırlanma hatasının canlıya alınması.</li>
-          </ul>
-        </div>
-        <div>
-          <p class="col-label carry">🔄 Devam Eden</p>
-          <ul class="tasklist carry">
-            <li>Portal tasarımının revize edilmesi ve teslimi.</li>
-            <li>Excel filtreleme problemi.</li>
-            <li>Excel 150.000 kayıt problemi.</li>
-            <li>Teams dosyalarının toparlanması.</li>
-            <li>Sistem sağlığı iyileştirmeleri.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+<section class="kpis">
+  <article class="kpi"><div class="kpi-top"><div class="kpi-label">Toplam Madde</div><div class="kpi-icon">Σ</div></div><div class="kpi-value" id="kpiTotal">0</div><div class="kpi-sub">Seçili kapsam</div></article>
+  <article class="kpi"><div class="kpi-top"><div class="kpi-label">Tamamlandı</div><div class="kpi-icon">✓</div></div><div class="kpi-value" id="kpiDone">0</div><div class="kpi-sub">Kapanan maddeler</div></article>
+  <article class="kpi"><div class="kpi-top"><div class="kpi-label">Devam / Test</div><div class="kpi-icon">↻</div></div><div class="kpi-value" id="kpiActive">0</div><div class="kpi-sub">Aktif yürüyen işler</div></article>
+  <article class="kpi overdue"><div class="kpi-top"><div class="kpi-label">Tarihi Geçen</div><div class="kpi-icon">!</div></div><div class="kpi-value" id="kpiLate">0</div><div class="kpi-sub">Hedef tarihi aşılmış</div></article>
+  <article class="kpi"><div class="kpi-top"><div class="kpi-label">Tamamlanma</div><div class="kpi-icon">%</div></div><div class="kpi-value" id="kpiRate">0%</div><div class="mini-progress"><span id="rateBar"></span></div></article>
+</section>
 
-    <!-- AĞUSTOS -->
-    <section class="month-entry">
-      <div class="entry-head">
-        <span class="entry-num">02</span>
-        <div class="entry-title-block">
-          <p class="ay">Ağustos 2026</p>
-          <p class="faz">İyileştirme ve Geliştirme</p>
-        </div>
-      </div>
-      <div class="entry-cols">
-        <div>
-          <p class="col-label new">📌 Yeni Maddeler</p>
-          <ul class="tasklist new">
-            <li>Görev yapısına göre gerekirse BI dataset çalışmasının yapılması.</li>
-            <li>Customer Insight doküman akışının daha dinamik hale getirilmesi.</li>
-            <li>Bina yönetimi modülünün yarıda kalan kısmının tamamlanması.</li>
-            <li>Portal teşkilat pozisyonları – "Pozisyon Durumu" filtresi hatasının düzeltilmesi.
-              <span class="note">Tüm pozisyonlara "Boş Pozisyon" atandığı için hepsi dolu görünüyor.</span>
-            </li>
-            <li>Aday başvuru yapısının değiştirilmesi.</li>
-            <li>Portal denetim kayıtlarında işlemi yapan kişinin adının görünür hale getirilmesi.</li>
-          </ul>
-        </div>
-        <div>
-          <p class="col-label carry">🔄 Devam Eden</p>
-          <ul class="tasklist carry">
-            <li>Portal tasarımının revize edilmesi ve teslimi.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+<section class="grid2">
+  <article class="panel"><h2>Ay Bazında İlerleme</h2><div class="panel-sub">Tamamlanan / toplam madde</div><div class="month-bars" id="monthBars"></div></article>
+  <article class="panel"><h2>Durum Dağılımı</h2><div class="panel-sub">Seçili filtre kapsamı</div><div class="status-list" id="statusList"></div></article>
+</section>
 
-    <!-- EYLÜL -->
-    <section class="month-entry">
-      <div class="entry-head">
-        <span class="entry-num">03</span>
-        <div class="entry-title-block">
-          <p class="ay">Eylül 2026</p>
-          <p class="faz">Portal ve Süreç Yönetimi</p>
-        </div>
-      </div>
-      <div class="entry-cols">
-        <div>
-          <p class="col-label new">📌 Yeni Maddeler</p>
-          <ul class="tasklist new">
-            <li>Taleplerin portale geçirilmesi; yurt müdürleri ve il kapsamındaki kişilere erişim tanımlanması.</li>
-            <li>Her ilin kendi başvurularını görüntüleyebilmesi.</li>
-            <li>Yazılım modüllerinde swimlane dosyalarının çalışılması.</li>
-            <li>SharePoint temizliği ve yapılandırması.</li>
-            <li>Yurt modülü ödeme API'sinin Ziraat, Kuveyt Türk vb. bankalarla çoklu entegrasyona açılması.</li>
-            <li>Burs ve yurt modülleri arasında öğrenci ilişkisinin kurulması.</li>
-          </ul>
-        </div>
-        <div>
-          <p class="col-label carry">🔄 Devam Eden</p>
-          <ul class="tasklist carry">
-            <li>Portal tasarımının revize edilmesi ve teslimi.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+<div class="section-head"><div><h2 id="listTitle">Roadmap Maddeleri</h2><p id="listSub">Güncel görev listesi</p></div></div>
+<section id="taskList" class="task-list"><div class="loading"><div class="spinner"></div>Veriler yükleniyor...</div></section>
 
-    <!-- EKİM -->
-    <section class="month-entry">
-      <div class="entry-head">
-        <span class="entry-num">04</span>
-        <div class="entry-title-block">
-          <p class="ay">Ekim 2026</p>
-          <p class="faz">Kurumsal Yapılandırma</p>
-        </div>
-      </div>
-      <div class="entry-cols">
-        <div>
-          <p class="col-label new">📌 Yeni Maddeler</p>
-          <ul class="tasklist new">
-            <li>Mümkün olması halinde portal test ortamının oluşturulması.</li>
-          </ul>
-        </div>
-        <div>
-          <p class="col-label carry">🔄 Devam Eden</p>
-          <ul class="tasklist carry">
-            <li>Her ilin kendi başvurularını görüntülemesi.</li>
-            <li>SharePoint temizliği ve yapılandırması.</li>
-            <li>Portal tasarımının revize edilmesi ve teslimi.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- KASIM -->
-    <section class="month-entry">
-      <div class="entry-head">
-        <span class="entry-num">05</span>
-        <div class="entry-title-block">
-          <p class="ay">Kasım 2026</p>
-          <p class="faz">Çağrı Merkezi ve Veri Yönetimi</p>
-        </div>
-      </div>
-      <div class="entry-cols">
-        <div>
-          <p class="col-label new">📌 Yeni Maddeler</p>
-          <ul class="tasklist new">
-            <li>Call center mimarisinin hayata geçirilmesi.</li>
-            <li>"Gönüllü Ol" formunda SMS doğrulamasının yapılması.</li>
-            <li>"Gönüllü Ol" formundan gelen kişilerin teşkilat kişisine dönüştürülmesi çalışması.</li>
-            <li>Veri temizlenmesi ve tekilleştirilmesi.</li>
-            <li>Verilerin kişi altında geçmiş olarak tutulması.</li>
-          </ul>
-        </div>
-        <div>
-          <p class="col-label carry">🔄 Devam Eden</p>
-          <ul class="tasklist carry">
-            <li>Portal tasarımının revize edilmesi ve teslimi.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- ARALIK -->
-    <section class="month-entry">
-      <div class="entry-head">
-        <span class="entry-num">06</span>
-        <div class="entry-title-block">
-          <p class="ay">Aralık 2026</p>
-          <p class="faz">Kapanış ve Kalite Çalışmaları</p>
-        </div>
-      </div>
-      <div class="entry-cols">
-        <div>
-          <p class="col-label new">📌 Yeni Maddeler</p>
-          <ul class="tasklist new">
-            <li>Veri temizlenmesi ve tekilleştirilmesi.</li>
-            <li>Verilerin kişi altında geçmiş olarak tutulması.</li>
-          </ul>
-        </div>
-        <div>
-          <p class="col-label carry">🔄 Devam Eden</p>
-          <ul class="tasklist carry">
-            <li>Portal tasarımının revize edilmesi ve teslimi.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <footer class="signoff">
-    <div class="signoff-top">
-      <div class="signoff-block">
-        <div class="stitle">Hazırlayan</div>
-        <div class="sval">Rumeysa Coskun</div>
-      </div>
-      <div class="signoff-block">
-        <div class="stitle">Kapsam</div>
-        <div class="sval">CRM · Portal · Yurt &amp; Burs Modülleri · Altyapı</div>
-      </div>
-      <div class="signoff-block">
-        <div class="stitle">Gözden Geçirme</div>
-        <div class="sval">Aylık ilerleme toplantılarında güncellenir</div>
-      </div>
-    </div>
-    <div class="signoff-bottom">
-      <div class="brand">TÜGVA</div>
-      <div class="meta">YAZILIM GELİŞTİRME YOL HARİTASI · TEMMUZ–ARALIK 2026</div>
-    </div>
-  </footer>
-
+<footer class="footer"><span>TÜGVA · Yazılım Roadmap</span><span>Veriler Supabase üzerinden canlı okunur.</span></footer>
 </div>
+<div id="toast" class="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-(function(){
-  var STORAGE_KEY = 'tugva-roadmap-status-v1';
-  var STATES = ['planned','in-progress','done'];
-  var LABELS = { planned:'Planlandı', 'in-progress':'Devam Ediyor', done:'Tamamlandı' };
+const SUPABASE_URL="https://qdcusnbyqxojdiymmxu.supabase.co";
+const SUPABASE_KEY="sb_publishable_eDok0jpAeslhCGvsNjVc6A_Uk7zWhY-";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-  function loadStatus(){
-    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-    catch(e){ return {}; }
-  }
-  function saveStatus(s){
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); }catch(e){}
-  }
+const MONTHS=[
+ ["2026-07","Temmuz 2026"],["2026-08","Ağustos 2026"],["2026-09","Eylül 2026"],
+ ["2026-10","Ekim 2026"],["2026-11","Kasım 2026"],["2026-12","Aralık 2026"],
+ ["2027-01","Ocak 2027"],["2027-02","Şubat 2027"],["2027-03","Mart 2027"]
+];
+const STATUS_ORDER=["Tamamlandı","Devam Ediyor","Test Ediliyor","Planlandı","Tehir Edildi"];
+const STATUS_COLORS={"Tamamlandı":"#2d8a5b","Devam Ediyor":"#3970b5","Test Ediliyor":"#6a5ab4","Planlandı":"#bd7a18","Tehir Edildi":"#7d8796"};
+const $=id=>document.getElementById(id);
+function esc(v=""){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function formatDate(iso){if(!iso)return"-"; return new Intl.DateTimeFormat("tr-TR",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(iso+"T12:00:00"))}
+function isOverdue(t){if(!t.due_date||t.recurring||t.status==="Tamamlandı"||t.status==="Tehir Edildi")return false;return new Date(t.due_date+"T23:59:59")<new Date()}
+function showToast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.remove("show"),1800)}
+function monthLabel(k){return MONTHS.find(x=>x[0]===k)?.[1]||k}
 
-  var stored = loadStatus();
-  var items = [];
+let allTasks=[];
 
-  document.querySelectorAll('.month-entry').forEach(function(entry, mIdx){
-    entry.querySelectorAll('.tasklist').forEach(function(ul, cIdx){
-      ul.querySelectorAll('li').forEach(function(li, iIdx){
-        var id = 'm' + mIdx + '-c' + cIdx + '-i' + iIdx;
-        var state = stored[id] || 'planned';
-
-        li.setAttribute('data-id', id);
-        li.setAttribute('data-status', state);
-        li.classList.add('state-' + state);
-
-        var badge = document.createElement('span');
-        badge.className = 'status-badge badge-' + state;
-        badge.innerHTML = '<span class="sdot"></span><span class="slabel">' + LABELS[state] + '</span>';
-        li.appendChild(badge);
-
-        items.push(li);
-      });
-    });
-  });
-
-  function setState(li, state){
-    var cur = li.getAttribute('data-status');
-    li.classList.remove('state-' + cur);
-    li.classList.add('state-' + state);
-    li.setAttribute('data-status', state);
-    var b = li.querySelector('.status-badge');
-    b.className = 'status-badge badge-' + state;
-    b.querySelector('.slabel').textContent = LABELS[state];
-  }
-
-  // Event delegation: works even if list changes later, and avoids any binding edge-cases.
-  document.querySelector('.dossier').addEventListener('click', function(e){
-    var li = e.target.closest('li[data-id]');
-    if(!li) return;
-    var cur = li.getAttribute('data-status');
-    var next = STATES[(STATES.indexOf(cur) + 1) % STATES.length];
-    setState(li, next);
-
-    var all = loadStatus();
-    all[li.getAttribute('data-id')] = next;
-    saveStatus(all);
-
-    updateStats();
-    applyFilter(currentFilter);
-  });
-
-  var currentFilter = 'all';
-  function applyFilter(filter){
-    currentFilter = filter;
-    items.forEach(function(li){
-      var match = (filter === 'all') || (li.getAttribute('data-status') === filter);
-      li.classList.toggle('filtered-out', !match);
-    });
-  }
-
-  function updateStats(){
-    var done = 0;
-    items.forEach(function(li){
-      if(li.getAttribute('data-status') === 'done') done++;
-    });
-    var total = items.length;
-    var numEl = document.getElementById('completionNum');
-    var barEl = document.getElementById('completionBar');
-    if(numEl) numEl.textContent = done + ' / ' + total;
-    if(barEl) barEl.style.width = (total ? Math.round((done / total) * 100) : 0) + '%';
-  }
-
-  document.querySelectorAll('.filter-btn').forEach(function(btn){
-    btn.addEventListener('click', function(){
-      document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
-      btn.classList.add('active');
-      applyFilter(btn.getAttribute('data-filter'));
-    });
-  });
-
-  updateStats();
-})();
+function setupFilters(){
+ $("monthFilter").innerHTML='<option value="all">Tüm Aylar</option>'+MONTHS.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("");
+ $("statusFilter").innerHTML='<option value="all">Tüm Durumlar</option>'+STATUS_ORDER.map(s=>`<option>${s}</option>`).join("");
+}
+async function loadTasks(){
+ const {data,error}=await client.from("roadmap_tasks").select("*").order("due_date",{ascending:true}).order("id",{ascending:true});
+ if(error){ $("taskList").innerHTML=`<div class="empty"><strong>Veriler yüklenemedi.</strong><br>${esc(error.message)}</div>`; return; }
+ allTasks=data||[];
+ $("updated").textContent="Son yenileme: "+new Intl.DateTimeFormat("tr-TR",{dateStyle:"medium",timeStyle:"short"}).format(new Date());
+ render();
+}
+function filtered(){
+ const m=$("monthFilter").value,s=$("statusFilter").value,q=$("searchInput").value.trim().toLocaleLowerCase("tr-TR");
+ return allTasks.filter(t=>(m==="all"||t.month===m)&&(s==="all"||t.status===s)&&(!q||(t.title+" "+(t.detail||"")).toLocaleLowerCase("tr-TR").includes(q)));
+}
+function render(){
+ const arr=filtered(), total=arr.length, done=arr.filter(t=>t.status==="Tamamlandı").length;
+ const active=arr.filter(t=>["Devam Ediyor","Test Ediliyor"].includes(t.status)).length, late=arr.filter(isOverdue).length, rate=total?Math.round(done/total*100):0;
+ $("kpiTotal").textContent=total;$("kpiDone").textContent=done;$("kpiActive").textContent=active;$("kpiLate").textContent=late;$("kpiRate").textContent=rate+"%";$("rateBar").style.width=rate+"%";
+ renderBars();renderStatus(arr);renderList(arr);
+}
+function renderBars(){
+ $("monthBars").innerHTML=MONTHS.map(m=>{const a=allTasks.filter(t=>t.month===m[0]),d=a.filter(t=>t.status==="Tamamlandı").length,p=a.length?Math.round(d/a.length*100):0;return `<div class="month-bar"><div class="month-name">${m[1]}</div><div class="bar-track"><div class="bar-fill" style="width:${p}%"></div></div><div class="bar-value">${d}/${a.length}</div></div>`}).join("");
+}
+function renderStatus(arr){
+ $("statusList").innerHTML=STATUS_ORDER.map(s=>`<div class="status-row"><div class="status-name"><span class="status-dot" style="background:${STATUS_COLORS[s]}"></span>${s}</div><div class="status-count">${arr.filter(t=>t.status===s).length}</div></div>`).join("");
+}
+function renderList(arr){
+ const m=$("monthFilter").value;$("listTitle").textContent=(m==="all"?"Tüm Aylar":monthLabel(m))+" · Roadmap Maddeleri";$("listSub").textContent=arr.length+" madde gösteriliyor.";
+ if(!arr.length){$("taskList").innerHTML='<div class="empty">Bu filtrede madde bulunamadı.</div>';return}
+ $("taskList").innerHTML=arr.map((t,i)=>`<article class="task-card ${isOverdue(t)?"overdue":(t.recurring?"recurring":"")}">
+ <div class="task-index">${i+1}</div>
+ <div><div class="task-title">${esc(t.title)}</div>${t.detail?`<div class="task-detail">${esc(t.detail)}</div>`:""}<div class="badges"><span class="badge">${monthLabel(t.month)}</span>${isOverdue(t)?'<span class="badge red">Tarihi geçti</span>':""}${t.recurring?'<span class="badge blue">Sürekli iş</span>':""}</div></div>
+ <div><span class="status-pill">${esc(t.status)}</span></div>
+ <div class="due"><strong>Hedef Tarih</strong>${formatDate(t.due_date)}</div></article>`).join("");
+}
+["monthFilter","statusFilter","searchInput"].forEach(id=>$(id).addEventListener(id==="searchInput"?"input":"change",render));
+$("clearBtn").addEventListener("click",()=>{$("monthFilter").value="all";$("statusFilter").value="all";$("searchInput").value="";render()});
+setupFilters();loadTasks();
 </script>
-
-</body>
-</html>
+</body></html>

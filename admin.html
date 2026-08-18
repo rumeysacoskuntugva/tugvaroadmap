@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TÜGVA Roadmap Admin</title>
+<style>
+:root{
+  --navy:#12213b; --navy2:#20395f; --orange:#f1772c; --green:#2c8a5b;
+  --blue:#3970b5; --purple:#6a5ab4; --red:#c84848; --amber:#bd7a18;
+  --bg:#f4f7fb; --card:#fff; --line:#dfe6ee; --text:#202938; --muted:#6d7888;
+  --soft:#f7f9fc; --shadow:0 14px 42px rgba(18,33,59,.07)
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{max-width:1480px;margin:auto;padding:24px 24px 64px}
+.hero{position:relative;overflow:hidden;color:#fff;border-radius:24px;background:linear-gradient(135deg,var(--navy),var(--navy2));padding:30px 32px;box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;width:340px;height:340px;border-radius:50%;background:rgba(255,255,255,.055);right:-90px;top:-180px}
+.hero-row{display:flex;justify-content:space-between;gap:24px;align-items:flex-start;position:relative;z-index:1}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#c7d3e2;font-weight:800}
+h1{font-size:35px;line-height:1.1;margin:7px 0 8px}
+.hero p{max-width:900px;color:#dbe4ef;line-height:1.55;margin:0}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid var(--line);background:#fff;color:var(--navy);padding:10px 13px;border-radius:11px;font-weight:750;transition:.15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:var(--orange);border-color:var(--orange);color:#fff}
+.btn.ghost{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.3);color:#fff}
+.btn.danger{background:#fff2f2;border-color:#f0cece;color:#a93737}
+.btn.small{padding:7px 10px;font-size:12px}
+.meta-row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:16px 0 11px}
+.live{display:inline-flex;align-items:center;gap:7px;border:1px solid #cfe3d8;background:#edf8f1;color:#2c6d4d;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800}
+.live:before{content:"";width:8px;height:8px;border-radius:50%;background:#34a66b}
+.updated{font-size:11px;color:var(--muted)}
+.filters{background:#fff;border:1px solid var(--line);border-radius:17px;padding:14px;display:grid;grid-template-columns:1fr 1fr 1.35fr auto;gap:10px;align-items:end;box-shadow:0 6px 20px rgba(18,33,59,.035)}
+.field label{display:block;font-size:10px;font-weight:850;color:var(--muted);letter-spacing:.06em;margin-bottom:6px}
+.control{width:100%;border:1px solid #ccd6e2;background:#fff;color:var(--text);border-radius:10px;padding:10px 11px;outline:none}
+.control:focus{border-color:#7793b8;box-shadow:0 0 0 3px rgba(57,112,181,.1)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin:13px 0}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:0 6px 18px rgba(18,33,59,.03)}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.kpi-label{font-size:11px;color:var(--muted);font-weight:800}
+.kpi-icon{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;background:#f1f4f8;color:var(--navy);font-weight:900}
+.kpi-value{font-size:27px;font-weight:850;color:var(--navy);margin-top:7px}
+.kpi-sub{font-size:10px;color:var(--muted);margin-top:3px}
+.kpi.overdue .kpi-value{color:var(--red)}
+.mini-progress{height:6px;background:#edf1f5;border-radius:99px;overflow:hidden;margin-top:9px}
+.mini-progress span{display:block;height:100%;background:var(--green);border-radius:99px}
+.grid2{display:grid;grid-template-columns:1.25fr .75fr;gap:13px;margin:13px 0 18px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:17px;padding:17px;box-shadow:0 6px 18px rgba(18,33,59,.03)}
+.panel h2{font-size:16px;margin:0;color:var(--navy)}
+.panel-sub{font-size:11px;color:var(--muted);margin:4px 0 14px}
+.month-bars{display:grid;gap:8px}
+.month-bar{display:grid;grid-template-columns:115px 1fr 60px;gap:9px;align-items:center}
+.month-name{font-size:11px;font-weight:750;color:#4d5b6d}
+.bar-track{height:9px;background:#edf1f5;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:999px}
+.bar-value{font-size:10px;color:var(--muted);text-align:right}
+.status-list{display:grid;gap:9px}
+.status-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #edf1f5;padding-bottom:8px}
+.status-row:last-child{border-bottom:0;padding-bottom:0}
+.status-name{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:750}
+.status-dot{width:9px;height:9px;border-radius:50%}
+.status-count{font-size:13px;font-weight:850;color:var(--navy)}
+.section-head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin:20px 0 9px}
+.section-head h2{font-size:20px;color:var(--navy);margin:0}
+.section-head p{font-size:11px;color:var(--muted);margin:4px 0 0}
+.task-list{display:grid;gap:9px}
+.task-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:13px 14px;display:grid;grid-template-columns:36px minmax(280px,1fr) 150px 135px;gap:11px;align-items:center;box-shadow:0 5px 14px rgba(18,33,59,.025)}
+.task-card.overdue{border-left:5px solid var(--red)}
+.task-card.recurring:not(.overdue){border-left:5px solid var(--blue)}
+.task-index{width:29px;height:29px;border-radius:8px;background:#f0f4f8;color:#526177;display:flex;align-items:center;justify-content:center;font-weight:850;font-size:11px}
+.task-title{font-size:13px;font-weight:800;color:#263348;line-height:1.35}
+.task-detail{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.42}
+.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.badge{display:inline-flex;border-radius:999px;padding:4px 7px;font-size:9px;font-weight:850;background:#f0f3f7;color:#566274}
+.badge.red{background:#fff0f0;color:#a93a3a}
+.badge.blue{background:#edf4ff;color:#3b6ea8}
+.status-pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;padding:7px 9px;font-size:10px;font-weight:850;background:#f2f4f7;color:#526074}
+.due{font-size:10px;color:var(--muted)}
+.due strong{display:block;color:#263348;margin-bottom:3px;font-size:11px}
+.empty{background:#fff;border:1px dashed #ccd7e3;border-radius:15px;padding:34px;text-align:center;color:var(--muted)}
+.loading{padding:36px;text-align:center;color:var(--muted)}
+.spinner{width:28px;height:28px;border:3px solid #e3e8ef;border-top-color:var(--blue);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.footer{margin-top:27px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:10px;display:flex;justify-content:space-between;gap:16px}
+.toast{position:fixed;right:20px;bottom:20px;background:#17253f;color:#fff;padding:11px 14px;border-radius:11px;font-size:11px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.18);transform:translateY(28px);opacity:0;transition:.2s;pointer-events:none;z-index:100}
+.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.filters{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}.task-card{grid-template-columns:36px 1fr 145px}.due{grid-column:3}}
+@media(max-width:720px){.app{padding:14px 11px 45px}.hero{padding:24px 20px}.hero-row{flex-direction:column}h1{font-size:28px}.filters,.kpis{grid-template-columns:1fr}.task-card{grid-template-columns:32px 1fr}.status-pill,.due{grid-column:2}.month-bar{grid-template-columns:90px 1fr 48px}.footer{flex-direction:column}}
+@media print{body{background:#fff}.app{max-width:none;padding:7mm}.hero-actions,.filters{display:none!important}.task-card,.panel,.kpi,.hero{box-shadow:none}.task-card{break-inside:avoid}}
+
+.admin-shell{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:
+radial-gradient(circle at 20% 20%,rgba(57,112,181,.13),transparent 30%),
+radial-gradient(circle at 80% 75%,rgba(241,119,44,.10),transparent 28%),#f4f7fb}
+.login-card{width:min(460px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 20px 60px rgba(18,33,59,.10)}
+.brand-mark{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--navy),var(--blue));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;margin-bottom:18px}
+.login-card h1{font-size:27px;color:var(--navy);margin:0 0 7px}.login-card p{font-size:12px;color:var(--muted);line-height:1.5;margin:0 0 19px}
+.login-card .field{margin-bottom:12px}.login-card .btn{width:100%;margin-top:5px}.login-msg{font-size:11px;color:var(--red);min-height:16px;margin-top:10px}
+.admin-app{display:none}.admin-app.on{display:block}
+.user-chip{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.26);background:rgba(255,255,255,.08);border-radius:999px;padding:8px 10px;font-size:10px;color:#fff}
+.user-chip:before{content:"";width:8px;height:8px;border-radius:50%;background:#54cf8b}
+.task-card.admin-row{grid-template-columns:36px minmax(280px,1fr) 150px 135px 90px}
+.status-select{width:100%;border:1px solid #cfd8e3;background:#fff;border-radius:9px;padding:8px;font-size:11px}
+.actions{display:flex;gap:5px;justify-content:flex-end}.icon-btn{width:35px;height:34px;border:1px solid #d5dee8;background:#fff;border-radius:9px;color:#526174;font-weight:850}.icon-btn.delete:hover{background:#fff0f0;color:#a93737;border-color:#efcdcd}
+.editor{display:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;margin:13px 0;box-shadow:var(--shadow)}.editor.open{display:block}.editor h3{margin:0 0 13px;color:var(--navy)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px}.span3{grid-column:span 3}.span2{grid-column:span 2}textarea.control{min-height:86px;resize:vertical}.checkline{display:flex;align-items:center;gap:8px;font-size:11px;color:#4e5c6f}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+@media(max-width:900px){.task-card.admin-row{grid-template-columns:32px 1fr}.status-select,.due,.actions{grid-column:2}.actions{justify-content:flex-start}.form-grid{grid-template-columns:1fr}.span3,.span2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<section id="loginView" class="admin-shell">
+ <div class="login-card">
+   <div class="brand-mark">T</div>
+   <div class="eyebrow" style="color:#718096">TÜGVA · Yönetim Paneli</div>
+   <h1>Roadmap Admin</h1>
+   <p>Roadmap maddelerini eklemek, düzenlemek ve durumlarını güncellemek için giriş yapın.</p>
+   <form id="loginForm">
+     <div class="field"><label>E-POSTA</label><input id="email" class="control" type="email" autocomplete="username" required></div>
+     <div class="field"><label>ŞİFRE</label><input id="password" class="control" type="password" autocomplete="current-password" required></div>
+     <button class="btn primary" type="submit" id="loginBtn">Giriş Yap</button>
+     <div class="login-msg" id="loginMsg"></div>
+   </form>
+ </div>
+</section>
+
+<div id="adminView" class="admin-app">
+<div class="app">
+<header class="hero">
+ <div class="hero-row">
+   <div><div class="eyebrow">TÜGVA · Bilgi Teknolojileri ve Yazılım</div><h1>Roadmap Yönetim Paneli</h1><p>Canlı roadmap verisini buradan yönetin. Kaydettiğiniz değişiklikler public dashboard'a yansır.</p></div>
+   <div class="hero-actions"><span class="user-chip" id="userChip">Admin</span><button class="btn ghost" id="logoutBtn">Çıkış Yap</button></div>
+ </div>
+</header>
+
+<div class="meta-row"><div class="live">Supabase bağlantısı aktif</div><div class="updated" id="updated">Yükleniyor...</div></div>
+
+<section class="filters">
+ <div class="field"><label>AY</label><select id="monthFilter" class="control"></select></div>
+ <div class="field"><label>DURUM</label><select id="statusFilter" class="control"></select></div>
+ <div class="field"><label>ARAMA</label><input id="searchInput" class="control" placeholder="Madde veya detay ara..."></div>
+ <button class="btn primary" id="newTaskBtn">+ Madde Ekle</button>
+</section>
+
+<section class="kpis">
+ <article class="kpi"><div class="kpi-top"><div class="kpi-label">Toplam Madde</div><div class="kpi-icon">Σ</div></div><div class="kpi-value" id="kpiTotal">0</div><div class="kpi-sub">Seçili kapsam</div></article>
+ <article class="kpi"><div class="kpi-top"><div class="kpi-label">Tamamlandı</div><div class="kpi-icon">✓</div></div><div class="kpi-value" id="kpiDone">0</div><div class="kpi-sub">Kapanan maddeler</div></article>
+ <article class="kpi"><div class="kpi-top"><div class="kpi-label">Devam / Test</div><div class="kpi-icon">↻</div></div><div class="kpi-value" id="kpiActive">0</div><div class="kpi-sub">Aktif yürüyen işler</div></article>
+ <article class="kpi overdue"><div class="kpi-top"><div class="kpi-label">Tarihi Geçen</div><div class="kpi-icon">!</div></div><div class="kpi-value" id="kpiLate">0</div><div class="kpi-sub">Hedef tarihi aşılmış</div></article>
+ <article class="kpi"><div class="kpi-top"><div class="kpi-label">Tamamlanma</div><div class="kpi-icon">%</div></div><div class="kpi-value" id="kpiRate">0%</div><div class="mini-progress"><span id="rateBar"></span></div></article>
+</section>
+
+<section class="editor" id="editor">
+ <h3 id="editorTitle">Yeni Madde Ekle</h3>
+ <form id="taskForm">
+   <input type="hidden" id="editId">
+   <div class="form-grid">
+     <div class="field"><label>AY</label><select id="formMonth" class="control" required></select></div>
+     <div class="field"><label>DURUM</label><select id="formStatus" class="control" required></select></div>
+     <div class="field"><label>HEDEF TARİH</label><input id="formDue" class="control" type="date" required></div>
+     <div class="field span3"><label>YAPILACAK İŞ</label><input id="formTitle" class="control" required></div>
+     <div class="field span3"><label>DETAY / NOT</label><textarea id="formDetail" class="control"></textarea></div>
+     <div class="span3 checkline"><input id="formRecurring" type="checkbox"><label for="formRecurring">Sürekli / mükerrer iş (tarihi geçen hesabına dahil edilmez)</label></div>
+   </div>
+   <div class="form-actions"><button class="btn" type="button" id="cancelBtn">Vazgeç</button><button class="btn primary" type="submit">Kaydet</button></div>
+ </form>
+</section>
+
+<section class="grid2">
+ <article class="panel"><h2>Ay Bazında İlerleme</h2><div class="panel-sub">Tamamlanan / toplam madde</div><div class="month-bars" id="monthBars"></div></article>
+ <article class="panel"><h2>Durum Dağılımı</h2><div class="panel-sub">Seçili filtre kapsamı</div><div class="status-list" id="statusList"></div></article>
+</section>
+
+<div class="section-head"><div><h2 id="listTitle">Roadmap Maddeleri</h2><p id="listSub">Maddeleri düzenleyebilir veya silebilirsiniz.</p></div></div>
+<section id="taskList" class="task-list"><div class="loading"><div class="spinner"></div>Veriler yükleniyor...</div></section>
+<footer class="footer"><span>TÜGVA · Roadmap Admin</span><span>Değişiklikler Supabase'e anında kaydedilir.</span></footer>
+</div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL="https://qdcusnbyqxojdiymmxu.supabase.co";
+const SUPABASE_KEY="sb_publishable_eDok0jpAeslhCGvsNjVc6A_Uk7zWhY-";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+
+const MONTHS=[
+ ["2026-07","Temmuz 2026"],["2026-08","Ağustos 2026"],["2026-09","Eylül 2026"],
+ ["2026-10","Ekim 2026"],["2026-11","Kasım 2026"],["2026-12","Aralık 2026"],
+ ["2027-01","Ocak 2027"],["2027-02","Şubat 2027"],["2027-03","Mart 2027"]
+];
+const STATUS_ORDER=["Tamamlandı","Devam Ediyor","Test Ediliyor","Planlandı","Tehir Edildi"];
+const STATUS_COLORS={"Tamamlandı":"#2d8a5b","Devam Ediyor":"#3970b5","Test Ediliyor":"#6a5ab4","Planlandı":"#bd7a18","Tehir Edildi":"#7d8796"};
+const $=id=>document.getElementById(id);
+function esc(v=""){return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+function formatDate(iso){if(!iso)return"-"; return new Intl.DateTimeFormat("tr-TR",{day:"2-digit",month:"short",year:"numeric"}).format(new Date(iso+"T12:00:00"))}
+function isOverdue(t){if(!t.due_date||t.recurring||t.status==="Tamamlandı"||t.status==="Tehir Edildi")return false;return new Date(t.due_date+"T23:59:59")<new Date()}
+function showToast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(window.__tt);window.__tt=setTimeout(()=>t.classList.remove("show"),1800)}
+function monthLabel(k){return MONTHS.find(x=>x[0]===k)?.[1]||k}
+
+let allTasks=[];
+
+function setupSelects(){
+ $("monthFilter").innerHTML='<option value="all">Tüm Aylar</option>'+MONTHS.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("");
+ $("statusFilter").innerHTML='<option value="all">Tüm Durumlar</option>'+STATUS_ORDER.map(s=>`<option>${s}</option>`).join("");
+ $("formMonth").innerHTML=MONTHS.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("");
+ $("formStatus").innerHTML=STATUS_ORDER.map(s=>`<option>${s}</option>`).join("");
+}
+async function authState(){
+ const {data:{session}}=await client.auth.getSession();
+ if(session) showAdmin(session.user); else showLogin();
+}
+function showLogin(){$("loginView").style.display="flex";$("adminView").classList.remove("on")}
+function showAdmin(user){$("loginView").style.display="none";$("adminView").classList.add("on");$("userChip").textContent=user.email||"Admin";loadTasks()}
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();$("loginMsg").textContent="";$("loginBtn").disabled=true;$("loginBtn").textContent="Giriş yapılıyor...";
+ const {data,error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
+ $("loginBtn").disabled=false;$("loginBtn").textContent="Giriş Yap";
+ if(error){$("loginMsg").textContent="Giriş başarısız: "+error.message;return}
+ showAdmin(data.user);
+});
+$("logoutBtn").addEventListener("click",async()=>{await client.auth.signOut();allTasks=[];showLogin()});
+
+async function loadTasks(){
+ const {data,error}=await client.from("roadmap_tasks").select("*").order("due_date",{ascending:true}).order("id",{ascending:true});
+ if(error){showToast("Veriler alınamadı");return}
+ allTasks=data||[];$("updated").textContent="Son yenileme: "+new Intl.DateTimeFormat("tr-TR",{dateStyle:"medium",timeStyle:"short"}).format(new Date());render();
+}
+function filtered(){
+ const m=$("monthFilter").value,s=$("statusFilter").value,q=$("searchInput").value.trim().toLocaleLowerCase("tr-TR");
+ return allTasks.filter(t=>(m==="all"||t.month===m)&&(s==="all"||t.status===s)&&(!q||(t.title+" "+(t.detail||"")).toLocaleLowerCase("tr-TR").includes(q)));
+}
+function render(){
+ const arr=filtered(),total=arr.length,done=arr.filter(t=>t.status==="Tamamlandı").length,active=arr.filter(t=>["Devam Ediyor","Test Ediliyor"].includes(t.status)).length,late=arr.filter(isOverdue).length,rate=total?Math.round(done/total*100):0;
+ $("kpiTotal").textContent=total;$("kpiDone").textContent=done;$("kpiActive").textContent=active;$("kpiLate").textContent=late;$("kpiRate").textContent=rate+"%";$("rateBar").style.width=rate+"%";
+ renderBars();renderStatus(arr);renderList(arr);
+}
+function renderBars(){
+ $("monthBars").innerHTML=MONTHS.map(m=>{const a=allTasks.filter(t=>t.month===m[0]),d=a.filter(t=>t.status==="Tamamlandı").length,p=a.length?Math.round(d/a.length*100):0;return `<div class="month-bar"><div class="month-name">${m[1]}</div><div class="bar-track"><div class="bar-fill" style="width:${p}%"></div></div><div class="bar-value">${d}/${a.length}</div></div>`}).join("");
+}
+function renderStatus(arr){$("statusList").innerHTML=STATUS_ORDER.map(s=>`<div class="status-row"><div class="status-name"><span class="status-dot" style="background:${STATUS_COLORS[s]}"></span>${s}</div><div class="status-count">${arr.filter(t=>t.status===s).length}</div></div>`).join("")}
+function renderList(arr){
+ const m=$("monthFilter").value;$("listTitle").textContent=(m==="all"?"Tüm Aylar":monthLabel(m))+" · Roadmap Maddeleri";$("listSub").textContent=arr.length+" madde gösteriliyor.";
+ if(!arr.length){$("taskList").innerHTML='<div class="empty">Bu filtrede madde bulunamadı.</div>';return}
+ $("taskList").innerHTML=arr.map((t,i)=>`<article class="task-card admin-row ${isOverdue(t)?"overdue":(t.recurring?"recurring":"")}">
+ <div class="task-index">${i+1}</div>
+ <div><div class="task-title">${esc(t.title)}</div>${t.detail?`<div class="task-detail">${esc(t.detail)}</div>`:""}<div class="badges"><span class="badge">${monthLabel(t.month)}</span>${isOverdue(t)?'<span class="badge red">Tarihi geçti</span>':""}${t.recurring?'<span class="badge blue">Sürekli iş</span>':""}</div></div>
+ <div><select class="status-select" data-status-id="${t.id}">${STATUS_ORDER.map(s=>`<option ${s===t.status?"selected":""}>${s}</option>`).join("")}</select></div>
+ <div class="due"><strong>Hedef Tarih</strong>${formatDate(t.due_date)}</div>
+ <div class="actions"><button class="icon-btn" data-edit="${t.id}" title="Düzenle">✎</button><button class="icon-btn delete" data-delete="${t.id}" title="Sil">×</button></div></article>`).join("");
+ document.querySelectorAll("[data-status-id]").forEach(el=>el.addEventListener("change",()=>quickStatus(Number(el.dataset.statusId),el.value)));
+ document.querySelectorAll("[data-edit]").forEach(el=>el.addEventListener("click",()=>openEditor(Number(el.dataset.edit))));
+ document.querySelectorAll("[data-delete]").forEach(el=>el.addEventListener("click",()=>deleteTask(Number(el.dataset.delete))));
+}
+async function quickStatus(id,status){
+ const {error}=await client.from("roadmap_tasks").update({status}).eq("id",id);if(error){showToast("Durum güncellenemedi");return};showToast("Durum güncellendi");await loadTasks();
+}
+function defaultDue(month){const [y,m]=month.split("-").map(Number),d=new Date(y,m,0);return `${y}-${String(m).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function openEditor(id=null){
+ $("editor").classList.add("open");$("editId").value=id||"";
+ if(id){const t=allTasks.find(x=>x.id===id);$("editorTitle").textContent="Maddeyi Düzenle";$("formMonth").value=t.month;$("formStatus").value=t.status;$("formDue").value=t.due_date||defaultDue(t.month);$("formTitle").value=t.title||"";$("formDetail").value=t.detail||"";$("formRecurring").checked=!!t.recurring}
+ else{const m=$("monthFilter").value==="all"?"2026-08":$("monthFilter").value;$("editorTitle").textContent="Yeni Madde Ekle";$("formMonth").value=m;$("formStatus").value="Planlandı";$("formDue").value=defaultDue(m);$("formTitle").value="";$("formDetail").value="";$("formRecurring").checked=false}
+ $("editor").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function closeEditor(){$("editor").classList.remove("open");$("editId").value="";$("taskForm").reset()}
+$("formMonth").addEventListener("change",()=>{if(!$("editId").value)$("formDue").value=defaultDue($("formMonth").value)});
+$("taskForm").addEventListener("submit",async e=>{
+ e.preventDefault();const id=$("editId").value;const payload={month:$("formMonth").value,title:$("formTitle").value.trim(),detail:$("formDetail").value.trim()||null,status:$("formStatus").value,due_date:$("formDue").value,recurring:$("formRecurring").checked};
+ let res=id?await client.from("roadmap_tasks").update(payload).eq("id",Number(id)):await client.from("roadmap_tasks").insert(payload);
+ if(res.error){showToast("Kaydedilemedi: "+res.error.message);return}closeEditor();showToast(id?"Madde güncellendi":"Madde eklendi");await loadTasks();
+});
+async function deleteTask(id){if(!confirm("Bu madde silinsin mi?"))return;const {error}=await client.from("roadmap_tasks").delete().eq("id",id);if(error){showToast("Silinemedi");return}showToast("Madde silindi");await loadTasks()}
+$("newTaskBtn").addEventListener("click",()=>openEditor());$("cancelBtn").addEventListener("click",closeEditor);
+["monthFilter","statusFilter","searchInput"].forEach(id=>$(id).addEventListener(id==="searchInput"?"input":"change",render));
+setupSelects();authState();
+</script>
+</body></html>
